@@ -5,7 +5,6 @@
   import { goto } from "$app/navigation";
 
   let digimonsToDisplay = [];
-  
 
   const getData = fetch("https://digimon-api.vercel.app/api/digimon")
     .then((response) => response.json())
@@ -45,20 +44,20 @@
   let choosenFilters = [];
 
   let runFilter = (arg) => {
-      if (choosenFilters.includes(arg)) {
-        let index = choosenFilters.findIndex((e) => e === arg);
-        choosenFilters.splice(index, 1);
-        console.log(choosenFilters)
-      } else {
-        choosenFilters.push(arg);
-        console.log(choosenFilters)
-      }
-        digimonsToDisplay = $digimons.filter((e) =>
-        choosenFilters.includes(e.level)
-      );
-      if(choosenFilters.length === 0){
-        digimonsToDisplay = $digimons
-      }
+    if (choosenFilters.includes(arg)) {
+      let index = choosenFilters.findIndex((e) => e === arg);
+      choosenFilters.splice(index, 1);
+      console.log(choosenFilters);
+    } else {
+      choosenFilters.push(arg);
+      console.log(choosenFilters);
+    }
+    digimonsToDisplay = $digimons.filter((e) =>
+      choosenFilters.includes(e.level)
+    );
+    if (choosenFilters.length === 0) {
+      digimonsToDisplay = $digimons;
+    }
   };
 </script>
 
@@ -68,13 +67,15 @@
   {:then data}
     <div class="filters">
       {#each filters() as filter}
-        <input
-          type="checkbox"
-          name="filter"
-          value={filter}
-          on:change={(event) => runFilter(event.target.value)}
-        />
-        <label for="filter">{filter}</label>
+        <div class="filter">
+          <input
+            type="checkbox"
+            value={filter}
+            class="hidden"
+            on:change={(event) => runFilter(event.target.value)}
+          />
+          <label for="filter" class="custom-checkbox">{filter}</label>
+        </div>
       {/each}
     </div>
     {#each digimonsToDisplay as digimon}
@@ -133,5 +134,33 @@
     position: absolute;
     top: 0px;
     right: 0px;
+  }
+  .filter {
+    position: relative;
+    width: 200px;
+    height: 30px;
+    margin: 5px;
+    color: var(--text-color);
+  }
+  .custom-checkbox {
+    display: block;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 1.7;
+  }
+  .hidden {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    opacity: 0;
+  }
+  .hidden:checked + .custom-checkbox {
+    background-color: red;
   }
 </style>
