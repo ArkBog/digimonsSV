@@ -59,6 +59,18 @@
       digimonsToDisplay = $digimons;
     }
   };
+  let filtersOpen = false;
+  let filtersHeaderIcon = "expand_more";
+  const expadFilters = () => {
+        if(filtersOpen === false){
+            filtersOpen = true;
+            filtersHeaderIcon = "expand_less";
+        }
+        else{
+            filtersOpen = false;
+            filtersHeaderIcon = "expand_more";
+        }
+    }
 </script>
 
 <div class="container">
@@ -66,17 +78,25 @@
     Data is loading
   {:then data}
     <div class="filters">
-      {#each filters() as filter}
-        <div class="filter">
-          <input
-            type="checkbox"
-            value={filter}
-            class="hidden"
-            on:change={(event) => runFilter(event.target.value)}
-          />
-          <label for="filter" class="custom-checkbox">{filter}</label>
-        </div>
-      {/each}
+      <button class="filters-header" on:click={expadFilters}>
+        <p>Filters</p>
+        <p>
+          <span class="material-symbols-outlined"> {filtersHeaderIcon} </span>
+        </p>
+      </button>
+      <div class="filters-container" style="display: {filtersOpen ? 'flex' : 'none'}">
+        {#each filters() as filter}
+          <div class="filter">
+            <input
+              type="checkbox"
+              value={filter}
+              class="hidden"
+              on:change={(event) => runFilter(event.target.value)}
+            />
+            <label for="filter" class="custom-checkbox">{filter}</label>
+          </div>
+        {/each}
+      </div>
     </div>
     {#each digimonsToDisplay as digimon}
       <div class="card">
@@ -135,6 +155,29 @@
     top: 0px;
     right: 0px;
   }
+  .filters-container{
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .filters {
+    margin: 10px auto;
+  }
+  .filters-header {
+    all:unset;
+    width: 250px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    color: var(--text-color);
+
+  }
+  .filters-header:hover{
+    cursor: pointer;
+  }
   .filter {
     position: relative;
     width: 200px;
@@ -160,7 +203,11 @@
     z-index: 1;
     opacity: 0;
   }
+  .hidden {
+    cursor: pointer;
+  }
   .hidden:checked + .custom-checkbox {
-    background-color: red;
+    background-color: var(--text-color);
+    color: var(--primary-color);
   }
 </style>
