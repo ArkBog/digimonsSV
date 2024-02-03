@@ -62,15 +62,27 @@
   let filtersOpen = false;
   let filtersHeaderIcon = "expand_more";
   const expadFilters = () => {
-        if(filtersOpen === false){
-            filtersOpen = true;
-            filtersHeaderIcon = "expand_less";
-        }
-        else{
-            filtersOpen = false;
-            filtersHeaderIcon = "expand_more";
-        }
+    if (filtersOpen === false) {
+      filtersOpen = true;
+      filtersHeaderIcon = "expand_less";
+    } else {
+      filtersOpen = false;
+      filtersHeaderIcon = "expand_more";
     }
+  };
+
+  let checkedStatus;
+  let searcher = "";
+  let searchDigimon = () => {
+    if (searcher === "") {
+      digimonsToDisplay = $digimons;
+    } else {
+      choosenFilters = [];
+      let allActiveFilters = document.querySelectorAll('input[type="checkbox"]');
+      allActiveFilters.forEach((checkbox)=>checkbox.checked = false)
+      digimonsToDisplay = $digimons.filter((e) => e.name.toLowerCase().includes(searcher));
+    }
+  };
 </script>
 
 <div class="container">
@@ -84,7 +96,11 @@
           <span class="material-symbols-outlined"> {filtersHeaderIcon} </span>
         </p>
       </button>
-      <div class="filters-container" style="display: {filtersOpen ? 'flex' : 'none'}">
+      <div
+        class="filters-container"
+        style="display: {filtersOpen ? 'flex' : 'none'}"
+      >
+        <input type="text" bind:value={searcher} on:keyup={searchDigimon} class="searchbar"/>
         {#each filters() as filter}
           <div class="filter">
             <input
@@ -155,7 +171,7 @@
     top: 0px;
     right: 0px;
   }
-  .filters-container{
+  .filters-container {
     width: 100%;
     flex-direction: column;
     align-items: center;
@@ -165,7 +181,7 @@
     margin: 10px auto;
   }
   .filters-header {
-    all:unset;
+    all: unset;
     width: 250px;
     display: flex;
     justify-content: space-around;
@@ -173,9 +189,8 @@
     background-color: var(--secondary-color);
     border-radius: 5px;
     color: var(--text-color);
-
   }
-  .filters-header:hover{
+  .filters-header:hover {
     cursor: pointer;
   }
   .filter {
@@ -209,5 +224,16 @@
   .hidden:checked + .custom-checkbox {
     background-color: var(--text-color);
     color: var(--primary-color);
+  }
+  .searchbar{
+    all: unset;
+    width: 220px;
+    height: 100%;
+    background-color: var(--secondary-color);
+    padding: 5px;
+    margin: 20px auto;
+    border-radius: 5px;
+    color: var(--text-color);
+
   }
 </style>
