@@ -18,10 +18,11 @@
     if ($favourites.includes(digimon)) {
       let index = $favourites.findIndex((e) => e === digimon);
       $favourites.splice(index, 1);
+      digimonsToDisplay = $digimons
     } else {
       $favourites.push(digimon);
+      digimonsToDisplay = $digimons
     }
-    console.log($favourites);
   };
 
   const navigateToComponent = () => goto("/details");
@@ -78,9 +79,13 @@
       digimonsToDisplay = $digimons;
     } else {
       choosenFilters = [];
-      let allActiveFilters = document.querySelectorAll('input[type="checkbox"]');
-      allActiveFilters.forEach((checkbox)=>checkbox.checked = false)
-      digimonsToDisplay = $digimons.filter((e) => e.name.toLowerCase().includes(searcher));
+      let allActiveFilters = document.querySelectorAll(
+        'input[type="checkbox"]'
+      );
+      allActiveFilters.forEach((checkbox) => (checkbox.checked = false));
+      digimonsToDisplay = $digimons.filter((e) =>
+        e.name.toLowerCase().includes(searcher)
+      );
     }
   };
 </script>
@@ -100,7 +105,12 @@
         class="filters-container"
         style="display: {filtersOpen ? 'flex' : 'none'}"
       >
-        <input type="text" bind:value={searcher} on:keyup={searchDigimon} class="searchbar"/>
+        <input
+          type="text"
+          bind:value={searcher}
+          on:keyup={searchDigimon}
+          class="searchbar"
+        />
         {#each filters() as filter}
           <div class="filter">
             <input
@@ -114,7 +124,7 @@
         {/each}
       </div>
     </div>
-    {#each digimonsToDisplay as digimon}
+    {#each digimonsToDisplay as digimon, i}
       <div class="card">
         <h1 class="card-name">{digimon.name}</h1>
         <div class="card-img">
@@ -124,9 +134,17 @@
             alt={digimon.name}
             on:click={() => navigateToComponent()}
           />
-          <button class="add-to-fav" on:click={() => addToFavourites(digimon)}
-            >Add to favourites</button
-          >
+          <button class="add-to-fav" on:click={() => addToFavourites(digimon.name)}>
+            {#if $favourites.includes(digimon.name)}
+              <span id={digimon.name}
+                class="material-symbols-outlined in-fav"
+              >
+                favorite
+              </span>
+            {:else}
+              <span id={digimon.name} class="material-symbols-outlined"> favorite </span>
+            {/if}
+          </button>
         </div>
         <p class="card-text">{digimon.level}</p>
       </div>
@@ -167,9 +185,14 @@
     cursor: pointer;
   }
   .add-to-fav {
+    all: unset;
     position: absolute;
     top: 0px;
-    right: 0px;
+    right: 5px;
+    cursor: pointer;
+  }
+  .in-fav {
+    background-color: red;
   }
   .filters-container {
     width: 100%;
@@ -225,7 +248,7 @@
     background-color: var(--text-color);
     color: var(--primary-color);
   }
-  .searchbar{
+  .searchbar {
     all: unset;
     width: 220px;
     height: 100%;
@@ -234,6 +257,5 @@
     margin: 20px auto;
     border-radius: 5px;
     color: var(--text-color);
-
   }
 </style>
