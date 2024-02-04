@@ -18,10 +18,10 @@
     if ($favourites.includes(digimon)) {
       let index = $favourites.findIndex((e) => e === digimon);
       $favourites.splice(index, 1);
-      digimonsToDisplay = $digimons
+      digimonsToDisplay = digimonsToDisplay
     } else {
       $favourites.push(digimon);
-      digimonsToDisplay = $digimons
+      digimonsToDisplay = digimonsToDisplay
     }
   };
 
@@ -110,6 +110,7 @@
           bind:value={searcher}
           on:keyup={searchDigimon}
           class="searchbar"
+          placeholder="Search by name"
         />
         {#each filters() as filter}
           <div class="filter">
@@ -134,16 +135,16 @@
             alt={digimon.name}
             on:click={() => navigateToComponent()}
           />
-          <button class="add-to-fav" on:click={() => addToFavourites(digimon.name)}>
-            {#if $favourites.includes(digimon.name)}
+          <button class="add-to-fav" on:click={() => addToFavourites(digimon)}>
+            <!-- {#if $favourites.includes(digimon)} -->
               <span id={digimon.name}
-                class="material-symbols-outlined in-fav"
+                class="material-symbols-outlined" style="background-color: {$favourites.includes(digimon) ? 'red' : ''}"
               >
                 favorite
               </span>
-            {:else}
-              <span id={digimon.name} class="material-symbols-outlined"> favorite </span>
-            {/if}
+            <!-- {:else} -->
+              <!-- <span id={digimon.name} class="material-symbols-outlined"> favorite </span> -->
+            <!-- {/if} -->
           </button>
         </div>
         <p class="card-text">{digimon.level}</p>
@@ -257,5 +258,9 @@
     margin: 20px auto;
     border-radius: 5px;
     color: var(--text-color);
+  }
+  .searchbar::placeholder{
+    color: white;
+    opacity: .5;
   }
 </style>
